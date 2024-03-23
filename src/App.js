@@ -30,7 +30,7 @@ const App = () => {
 
 
 
-  const API_URL = "http://localhost:8080/"
+  const API_URL = "https://oneture-assessment-backend-2.vercel.app/"
 
   const fetchData = async (pageNumber) => {
     try {
