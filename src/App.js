@@ -287,3 +287,36 @@ const App = () => {
 };
 
 export default App;
+
+
+
+
+
+
+WITH relationship_cte AS (
+    SELECT 
+        cr.contribution_relationship_num
+    FROM 
+        contribution_relationship cr
+    JOIN 
+        contribution_role crl
+    ON 
+        cr.contribution_relationship_num = crl.contribution_relationship_num
+    WHERE 
+        crl.legal_entity = '1234' 
+    AND 
+        cr.effective_start_dte <= '2024-02-24' 
+    AND 
+        (cr.effective_end_dte IS NULL OR cr.effective_end_dte >= '2024-02-24')
+)
+SELECT 
+    cr.*,
+    crl.*
+FROM 
+    contribution_relationship cr
+JOIN 
+    contribution_role crl
+ON 
+    cr.contribution_relationship_num = crl.contribution_relationship_num
+WHERE 
+    cr.contribution_relationship_num IN (SELECT contribution_relationship_num FROM relationship_cte);
