@@ -288,3 +288,42 @@ const App = () => {
 
 export default App;
 
+
+
+const affiliateGroup = result.find(obj => obj.contribution_role_type_cde === 2);
+
+let response = {};
+
+if (affiliateGroup) {
+    response = {
+        affiliateGroupLegalEntityID: affiliateGroup.legal_entity,
+        affiliateGroupTypeCode: affiliateGroup.contribution_rel_type_cde,
+        effectiveDate: affiliateGroup.effective_start_dte,
+        affiliateGroupContributorDetails: []
+    };
+}
+
+// Step 2: Find all objects with contribution_role_type_cde=1 and create the array
+result.forEach(obj => {
+    if (obj.contribution_role_type_cde === 1) {
+        const contributorDetail = {
+            contributorLegalEntityID: obj.legal_entity,
+            contributorStartDate: obj.contribution_start_dte,
+            contributorEndDate: obj.contribution_end_dte,
+            contributorTypeCode: obj.contribution_role_type_cde,
+            TerminationReasonCode: obj.termination_reason_cde,
+            affiliateGroupContributorRelationCode: obj.contribution_entity_type_cde
+        };
+        response.affiliateGroupContributorDetails.push(contributorDetail);
+    }
+});
+
+// Handle cases where no contribution_role_type_cde=2 is found
+if (Object.keys(response).length === 0) {
+    response = {
+        message: 'No contribution_role_type_cde=2 found in the data.'
+    };
+}
+
+console.log(JSON.stringify(response, null, 2));
+
